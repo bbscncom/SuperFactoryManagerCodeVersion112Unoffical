@@ -1,0 +1,40 @@
+NAME "Known issues"
+
+-- Official SFM Discord:
+-- https://discord.gg/5mbUY3mu6m
+
+-- Official SFM issue tracker:
+-- https://github.com/TeamDman/SuperFactoryManager/issues
+
+-- JEI support is missing from some versions
+
+-- Sometimes managers stop working for 'no reason'
+---- "Rebuild cable network" gui button to try fix single
+---- "/sfm bust_cable_network_cache" to try fix all
+---- If it happens once, it will probably come back :(
+---- I have no idea why this happens
+---- If you can reproduce this, pls tell me how
+
+-- Having like 9000 labels in a label gun corrupts world
+---- because the NBT is too big
+---- the network tool may cause similar situations
+
+-- mouse drag selection desyncs with mouse position in long scripts
+-- pressing tab jumps to the bottom of long scripts
+
+-- outputting to composters (1.20.3+) without specifying a side
+ -- will skip the check for if the item is compostable
+ -- turning the composter into a trash can
+
+-- "Press Ctrl+E to edit" and other tooltips show in edit screen
+
+-- scroll bar in the logs gui becomes inaccurate as logs grow
+
+-- CoFH inventories have integer overflow when moving items in large quantities
+EVERY 20 TICKS DO
+    INPUT seeds FROM mekanism_creative_bin
+    OUTPUT TO phyto SLOTS 0
+    -- sfm warning that resource loss has occurred because cofh returns erroneous values
+END
+
+-- Sorry for any inconveniences :(

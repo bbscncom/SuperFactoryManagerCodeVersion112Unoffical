@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "triggered=false": { "model": "sfm:manager" },
+    "triggered=true":  { "model": "sfm:manager" }
+  }
+}
