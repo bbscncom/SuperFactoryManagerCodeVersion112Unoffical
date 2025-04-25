@@ -20,12 +20,14 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Collection;
 import java.util.Map;
 
+@SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber(modid = SFM.MOD_ID, value = Side.CLIENT)
 /*
  * This class uses code from tasgon's "observable" mod, also using MPLv2

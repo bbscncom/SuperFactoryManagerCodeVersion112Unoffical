@@ -33,11 +33,13 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 
+@SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber(modid = SFM.MOD_ID, value = Side.CLIENT)
 public class ContainerScreenInspectorHandler {
     private static boolean visible = false;
