@@ -65,7 +65,7 @@ public class Tooltip {
         FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
         String formattedText = text.getFormattedText(); // Converts to legacy formatting codes (§)
         return Arrays.stream(formattedText.split("\\\\n"))
-                .flatMap(s -> Stream.of(fontRenderer.listFormattedStringToWidth(formattedText, maxWidth).toArray(new String[]{})))
+                .flatMap(s -> Stream.of(fontRenderer.listFormattedStringToWidth(s , maxWidth).toArray(new String[]{})))
                 .collect(Collectors.toList());
     }
 }

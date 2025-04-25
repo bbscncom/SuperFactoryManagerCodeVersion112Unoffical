@@ -28,8 +28,6 @@ import java.util.stream.Collectors;
 
 public class ExamplesScreen extends GuiScreenExtend{
     private final BiConsumer<String, Map<String, String>> CALLBACK;
-    private final List<GuiEventListener> children = Lists.newArrayList();
-    private final List<Renderable> renderables = new ArrayList<>();
 
     public ExamplesScreen(BiConsumer<String, Map<String, String>> callback) {
 //        super(LocalizationKeys.EXAMPLES_GUI_TITLE.getComponent());
@@ -70,6 +68,7 @@ public class ExamplesScreen extends GuiScreenExtend{
         super.initGui();
         renderables.clear();
         children.clear();
+
         IResourceManager resourceManager = Minecraft.getMinecraft().getResourceManager();
         List<ResourceLocation> files = Tools.listSfmlResources("sfm", "template_programs");
         List<ResourceLocation> collect = files.stream()
@@ -158,15 +157,5 @@ public class ExamplesScreen extends GuiScreenExtend{
                 i++;
             }
         }
-    }
-
-    protected <T extends GuiEventListener & Renderable> T addRenderableWidget(T pWidget) {
-        this.renderables.add(pWidget);
-        return this.addWidget(pWidget);
-    }
-
-    protected <T extends GuiEventListener> T addWidget(T pListener) {
-        this.children.add(pListener);
-        return pListener;
     }
 }

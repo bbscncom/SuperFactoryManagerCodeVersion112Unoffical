@@ -11,21 +11,28 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
 public class FluidResourceType extends RegistryBackedResourceType<FluidStack, FluidExtend, IFluidHandler> {
+    public static FluidRegistryWrapper fluidRegistryWrapper = FluidRegistryWrapper.INSTANCE;
+    public static boolean isWrapper = false;
+
     public FluidResourceType() {
         super(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
     }
 
     @Override
     public IForgeRegistry<FluidExtend> getRegistry() {
-        Map<String, Fluid> regs = FluidRegistry.getRegisteredFluids();
-
-        return FluidRegistryWrapper.INSTANCE;
+        if (!isWrapper) {
+            Map<String, Fluid> regs = FluidRegistry.getRegisteredFluids();
+            fluidRegistryWrapper.wrapper(regs);
+            isWrapper = true;
+        }
+        return fluidRegistryWrapper;
     }
 
     @Override
@@ -49,25 +56,28 @@ public class FluidResourceType extends RegistryBackedResourceType<FluidStack, Fl
     @Override
     protected FluidStack setCount(FluidStack fluidStack, long amount) {
         int finalAmount = amount > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) amount;
-        fluidStack.amount=finalAmount;
+        fluidStack.amount = finalAmount;
         return fluidStack;
     }
 
     @Override
     public long getAmount(FluidStack stack) {
+        if (stack == null) return 0;
         return stack.amount;
     }
 
     @Override
     public FluidStack getStackInSlot(IFluidHandler cap, int slot) {
-        //todo 低版本IFluidHandler没有原生流体slot功能，所以不同mod可能有不同slot实现，作为物流系统不好兼容，这里返回null(可能报错
-//        return cap.getFluidInTank(slot);
-        return null;
+        FluidStack contents = cap.getTankProperties()[slot].getContents();
+        return contents == null ? null : contents;
     }
 
     @Override
     public FluidStack extract(IFluidHandler handler, int slot, long amount_long, boolean simulate) {
         FluidStack in = getStackInSlot(handler, slot);
+        if (in == null) {
+            return null;
+        }
         FluidStack toExtract = new FluidStack(
                 in.getFluid(), // 直接获取流体对象
                 (int) Math.min(amount_long, Integer.MAX_VALUE)
@@ -121,7 +131,8 @@ public class FluidResourceType extends RegistryBackedResourceType<FluidStack, Fl
 
     @Override
     public boolean isEmpty(FluidStack stack) {
-        return stack.amount==0;
+        if (stack == null) return true;
+        return stack.amount == 0;
     }
 
 

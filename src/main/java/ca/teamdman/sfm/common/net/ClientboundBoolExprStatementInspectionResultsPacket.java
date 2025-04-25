@@ -11,6 +11,9 @@ public class ClientboundBoolExprStatementInspectionResultsPacket implements SFMM
     public static final int MAX_RESULTS_LENGTH = 2048;
     public String results;
 
+    public ClientboundBoolExprStatementInspectionResultsPacket() {
+    }
+
     public ClientboundBoolExprStatementInspectionResultsPacket(String results) {
         this.results = results;
     }

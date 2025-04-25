@@ -288,3 +288,5 @@ sfm.network_tool.reminder_overlay=Toggle network tool overlay with %s
 # Mod metadata
 mod.name=Super Factory Manager
 mod=Super Factory Manager
+
+itemGroup.sfm=Super Factory Manager

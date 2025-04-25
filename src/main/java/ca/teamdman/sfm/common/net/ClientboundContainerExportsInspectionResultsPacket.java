@@ -16,6 +16,9 @@ public class ClientboundContainerExportsInspectionResultsPacket implements SFMMe
     public String results;
     public static final int MAX_RESULTS_LENGTH = 20480;
 
+    public ClientboundContainerExportsInspectionResultsPacket() {
+    }
+
     public ClientboundContainerExportsInspectionResultsPacket(int windowId, String result) {
         this.windowId=windowId;
         this.results=result;

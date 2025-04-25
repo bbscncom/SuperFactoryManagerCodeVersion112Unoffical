@@ -25,6 +25,9 @@ public final class ServerboundFacadePacket implements SFMMessage<ServerboundFaca
     public  ItemStack paintStack;
     public  EnumHand paintHand;
 
+    public ServerboundFacadePacket() {
+    }
+
     public ServerboundFacadePacket(RayTraceResult hitResult, FacadeSpreadLogic spreadLogic, ItemStack paintStack, EnumHand paintHand) {
         this.hitResult = hitResult;
         this.spreadLogic = spreadLogic;

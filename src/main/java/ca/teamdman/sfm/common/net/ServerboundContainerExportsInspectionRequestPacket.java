@@ -13,6 +13,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import my.Tools;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.Container;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -33,6 +34,9 @@ import java.util.stream.Collectors;
 public class ServerboundContainerExportsInspectionRequestPacket implements SFMMessage<ServerboundContainerExportsInspectionRequestPacket, IMessage> {
     public int windowId;
     public BlockPos pos;
+
+    public ServerboundContainerExportsInspectionRequestPacket() {
+    }
 
     public ServerboundContainerExportsInspectionRequestPacket(int windowId, BlockPos pos) {
         this.windowId=windowId;
@@ -164,7 +168,7 @@ public class ServerboundContainerExportsInspectionRequestPacket implements SFMMe
     @Override
     public IMessage onMessage(ServerboundContainerExportsInspectionRequestPacket msg, MessageContext context) {
         new SFMPacketHandlingContext(context).handleServerboundContainerPacket(
-                ManagerContainerMenu.class,
+                Container.class,
                 TileEntity.class,
                 msg.pos,
                 msg.windowId,

@@ -3,6 +3,7 @@ package ca.teamdman.sfm.common.logging;
 import ca.teamdman.sfm.SFM;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.TextComponentTranslation;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
@@ -120,7 +121,7 @@ public class TranslatableLogger {
                    && a.getNanoOfSecond() > b.getNanoOfSecond());
     }
 
-    public static ArrayDeque<TranslatableLogEvent> decode(ByteBuf buf) {
+    public static ArrayDeque<TranslatableLogEvent> decode(PacketBuffer buf) {
         int size = buf.readInt();
         ArrayDeque<TranslatableLogEvent> contents = new ArrayDeque<>(size);
         for (int i = 0; i < size; i++) {
@@ -135,7 +136,7 @@ public class TranslatableLogger {
         int count = 0;
         for (Iterator<TranslatableLogEvent> iterator = logs.iterator(); iterator.hasNext(); ) {
             TranslatableLogEvent entry = iterator.next();
-            ByteBuf check = Unpooled.buffer();
+            PacketBuffer check = new PacketBuffer(Unpooled.buffer());
             entry.encode(check);
             if (check.readableBytes() + chunk.readableBytes() + buf.readableBytes() >= maxReadableBytes) {
                 break;

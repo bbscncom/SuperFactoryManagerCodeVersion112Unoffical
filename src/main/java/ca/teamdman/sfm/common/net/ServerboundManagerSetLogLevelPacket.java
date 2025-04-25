@@ -19,6 +19,9 @@ public class ServerboundManagerSetLogLevelPacket implements SFMMessage<Serverbou
     private  BlockPos pos;
     private  String logLevel;
 
+    public ServerboundManagerSetLogLevelPacket() {
+    }
+
     public ServerboundManagerSetLogLevelPacket(int windowId, BlockPos pos, String logLevel) {
         this.windowId = windowId;
         this.pos = pos;

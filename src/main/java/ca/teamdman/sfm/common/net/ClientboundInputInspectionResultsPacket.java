@@ -7,10 +7,13 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
+
 public class ClientboundInputInspectionResultsPacket implements  SFMMessage<ClientboundInputInspectionResultsPacket,IMessage> {
     private String results;
     public static final int MAX_RESULTS_LENGTH = 20480;
 
+    public ClientboundInputInspectionResultsPacket() {
+    }
 
     public ClientboundInputInspectionResultsPacket(String results) {
         this.results = results;

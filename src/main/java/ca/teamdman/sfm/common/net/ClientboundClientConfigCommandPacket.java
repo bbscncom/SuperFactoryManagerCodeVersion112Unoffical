@@ -14,6 +14,9 @@ import net.minecraftforge.fml.relauncher.Side;
 public class ClientboundClientConfigCommandPacket implements SFMMessage<ClientboundClientConfigCommandPacket, IMessage> {
     ConfigCommandBehaviourInput requestingEditMode;
 
+    public ClientboundClientConfigCommandPacket() {
+    }
+
     public ClientboundClientConfigCommandPacket(ConfigCommandBehaviourInput behaviour) {
         this.requestingEditMode=behaviour;
     }

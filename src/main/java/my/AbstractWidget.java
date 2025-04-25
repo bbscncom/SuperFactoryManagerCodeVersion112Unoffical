@@ -83,7 +83,8 @@ public abstract class AbstractWidget extends Gui implements GuiEventListener, Re
     }
 
     public boolean clicked(int mouseX, int mouseY) {
-        return mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
+        return this.active && this.visible &&
+                mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
     }
 
     @Override

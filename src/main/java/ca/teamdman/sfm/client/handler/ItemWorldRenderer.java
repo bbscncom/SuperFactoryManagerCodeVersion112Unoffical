@@ -68,9 +68,9 @@ public class ItemWorldRenderer {
 //    private static final int capabilityColor = FastColor.ARGB32.color(100, 100, 0, 255);
 //    private static final int capabilityColorLimitedView = FastColor.ARGB32.color(100, 0, 100, 255);
 //    private static final int cableColor = FastColor.ARGB32.color(100, 100, 255, 0);
-    private static final int capabilityColor = Tools.toARGB(10, 135, 206, 235);
-    private static final int cableColor = Tools.toARGB(10, 135, 206, 235);
-    private static final int capabilityColorLimitedView = Tools.toARGB(10, 100, 0, 100);
+    private static final int capabilityColor = Tools.toARGB(40, 135, 206, 235);
+    private static final int cableColor = Tools.toARGB(40, 135, 206, 235);
+    private static final int capabilityColorLimitedView = Tools.toARGB(40, 100, 0, 100);
 
     @SubscribeEvent
     public static void renderOverlays(RenderWorldLastEvent event) {

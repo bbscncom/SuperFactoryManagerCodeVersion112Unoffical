@@ -9,25 +9,32 @@ import ca.teamdman.sfm.client.registry.SFMKeyMappings;
 import ca.teamdman.sfm.common.localization.LocalizationKeys;
 import ca.teamdman.sfm.common.net.ServerboundContainerExportsInspectionRequestPacket;
 import ca.teamdman.sfm.common.registry.SFMPackets;
+import javafx.scene.input.MouseButton;
 import my.Button;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 
@@ -61,9 +68,9 @@ public class ContainerScreenInspectorHandler {
 
         int mouseX = Mouse.getX() * scaledWidth / mc.displayWidth;
         int mouseY = scaledHeight - Mouse.getY() * scaledHeight / mc.displayHeight - 1;
-        if (shouldCapture && visible && exportInspectorButton.clicked(mouseX, mouseY)) {
+        if (shouldCapture && visible && exportInspectorButton.clicked(mouseX, mouseY) && Mouse.isButtonDown(0)) {
             exportInspectorButton.playDownSound(mc);
-            exportInspectorButton.onClick(mouseX, mouseY,0);
+            exportInspectorButton.onClick(mouseX, mouseY, 0);
             event.setCanceled(true);
         }
     }
@@ -71,16 +78,16 @@ public class ContainerScreenInspectorHandler {
     @SubscribeEvent
     public static void onGuiRender(GuiScreenEvent.DrawScreenEvent.Post event) {
         if (!visible) return;
-        if (event.getGui() instanceof GuiContainer ) {
+        if (event.getGui() instanceof GuiContainer) {
             GuiContainer screen = (GuiContainer) event.getGui();
             lastScreen = screen;
             Container menu = screen.inventorySlots;
             int containerSlotCount = 0;
             int inventorySlotCount = 0;
-//            GuiGraphics graphics = event.getGuiGraphics();
-//            PoseStack poseStack = graphics.pose();
-//            poseStack.pushPose();
-//            poseStack.translate(0, 0, 350); // render text over the items but under the tooltips
+
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(0, 0, 350);
+
 
             // draw the button
             exportInspectorButton.render(event.getMouseX(), event.getMouseY(), event.getRenderPartialTicks());
@@ -156,6 +163,8 @@ public class ContainerScreenInspectorHandler {
                     0xFFFFFF,
                     true
             );
+
+            GlStateManager.popMatrix();
         }
     }
 
@@ -163,8 +172,8 @@ public class ContainerScreenInspectorHandler {
     public static void onKeyDown(GuiScreenEvent.KeyboardInputEvent.Pre event) {
         // Handle Ctrl+I hotkey to toggle overlay
         KeyBinding toggleKey = SFMKeyMappings.CONTAINER_INSPECTOR_KEY;
-//        boolean toggleKeyPressed = toggleKey.isActiveAndMatches(InputConstants.Type.KEYSYM.getOrCreate(event.getKeyCode()));
-        if (toggleKey.isKeyDown()) {
+        boolean toggleKeyPressed = Keyboard.isKeyDown(toggleKey.getKeyCode()) && Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
+        if (toggleKeyPressed) {
             visible = !visible;
             event.setCanceled(true);
             return;

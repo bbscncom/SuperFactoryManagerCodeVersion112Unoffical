@@ -1,0 +1,4 @@
+every 20ticks do 
+input from in
+output to out
+end

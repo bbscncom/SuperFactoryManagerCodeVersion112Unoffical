@@ -6,7 +6,7 @@ import ca.teamdman.sfm.common.block.CableFacadeBlock;
 import ca.teamdman.sfm.common.block.ManagerBlock;
 import ca.teamdman.sfm.common.blockentity.CableFacadeBlockEntity;
 import ca.teamdman.sfm.common.blockentity.ManagerBlockEntity;
-import com.example.sfmbbs.Tags;
+import ca.teamdman.sfmbbs.Tags;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;

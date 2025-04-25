@@ -7,12 +7,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SFMCreativeTabs {
-    public static final CreativeTabs SFMTAB = new CreativeTabs(CreativeTabs.getNextID(), "decorations")
-    {
-        @SideOnly(Side.CLIENT)
-        public ItemStack createIcon()
-        {
-            return new ItemStack(SFMBlocks.MANAGER_BLOCK, 1, BlockDoublePlant.EnumPlantType.PAEONIA.getMeta());
+
+    public static CreativeTabs SFMTAB = new CreativeTabs("sfm") {
+        public ItemStack createIcon() {
+            return new ItemStack(SFMItems.LABEL_GUN_ITEM);
         }
     };
+
 }

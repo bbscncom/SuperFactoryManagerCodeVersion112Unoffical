@@ -4,6 +4,7 @@ import ca.teamdman.sfm.common.capability.*;
 import ca.teamdman.sfm.common.item.LabelGunItem;
 import ca.teamdman.sfm.common.program.LabelPositionHolder;
 import io.netty.buffer.Unpooled;
+import my.ToolTextComponentSerializer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -111,8 +112,8 @@ public class SFMDataComponents {
             public NBTBase writeNBT(Capability<Warnings> capability, Warnings instance, EnumFacing side) {
                 NBTTagCompound nbtTagCompound = new NBTTagCompound();
                 StringBuilder builder = new StringBuilder();
-                for (ITextComponent iTextComponent : instance.data) {
-                    builder.append(ITextComponent.Serializer.componentToJson(iTextComponent));
+                for (TextComponentTranslation iTextComponent : instance.data) {
+                    builder.append(ToolTextComponentSerializer.serialize(iTextComponent));
                     builder.append("-----------------");
                 }
                 nbtTagCompound.setString("warnings", new String(builder));
@@ -126,7 +127,7 @@ public class SFMDataComponents {
                 String string = nbt1.getString("warnings");
                 String[] split = string.split("-----------------");
                 for (int i = 0; i < split.length - 1; i++) {
-                    iTextComponents.add((TextComponentTranslation) ITextComponent.Serializer.jsonToComponent(split[i]));
+                    iTextComponents.add( ToolTextComponentSerializer.deserialize(split[i]));
                 }
                 instance.data = iTextComponents;
             }

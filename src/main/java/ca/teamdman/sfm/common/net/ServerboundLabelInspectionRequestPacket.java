@@ -17,6 +17,9 @@ public class ServerboundLabelInspectionRequestPacket implements SFMMessage<Serve
     private static final int MAX_RESULTS_LENGTH = 20480;
     public String label;
 
+    public ServerboundLabelInspectionRequestPacket() {
+    }
+
     public ServerboundLabelInspectionRequestPacket(String name) {
         this.label=name;
     }

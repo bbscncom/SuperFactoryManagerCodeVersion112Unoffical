@@ -3,6 +3,9 @@ package ca.teamdman.sfm.common.container;
 import ca.teamdman.sfm.common.blockentity.ManagerBlockEntity;
 import ca.teamdman.sfm.common.item.DiskItem;
 import ca.teamdman.sfm.common.logging.TranslatableLogEvent;
+import com.google.common.collect.EvictingQueue;
+import my.BoundedEvictingDeque;
+import my.EmptyDeque;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -12,12 +15,14 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayDeque;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ManagerContainerMenu extends Container {
     public ManagerBlockEntity entity;
     public InventoryPlayer playerInventory;
     public BlockPos MANAGER_POSITION;
-    public ArrayDeque<TranslatableLogEvent> logs;
+    public EmptyDeque<TranslatableLogEvent> logs;
     public String logLevel;
     public boolean isLogScreenOpen = false;
     public String program;
@@ -33,8 +38,7 @@ public class ManagerContainerMenu extends Container {
         this.logLevel = tileEntity.logger.getLogLevel().name();
         this.state = tileEntity.getState();
         this.tickTimeNanos = tileEntity.getTickTimeNanos();
-        this.logs = new ArrayDeque<>();
-
+        this.logs = new EmptyDeque<>(3000);
 
         // Add disk slot
         this.addSlotToContainer(new Slot(entity, 0, 15, 47) {

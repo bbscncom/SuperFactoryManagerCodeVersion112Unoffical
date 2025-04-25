@@ -29,6 +29,9 @@ public class ServerboundOutputInspectionRequestPacket implements SFMMessage<Serv
     public int outputNodeIndex;
     private static final int MAX_RESULTS_LENGTH = 20480;
 
+    public ServerboundOutputInspectionRequestPacket() {
+    }
+
     public ServerboundOutputInspectionRequestPacket(String programString, int nodeIndex) {
         this.programString=programString;
         this.outputNodeIndex=nodeIndex;

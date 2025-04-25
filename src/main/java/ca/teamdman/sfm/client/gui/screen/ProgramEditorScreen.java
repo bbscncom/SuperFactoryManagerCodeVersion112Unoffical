@@ -19,42 +19,33 @@ import ca.teamdman.sfml.manipulation.ManipulationResult;
 import ca.teamdman.sfml.manipulation.ProgramStringManipulationUtils;
 import ca.teamdman.sfml.program_builder.ProgramBuildResult;
 import ca.teamdman.sfml.program_builder.ProgramBuilder;
-import com.google.common.collect.Lists;
 import my.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("NotNullFieldNotInitialized")
 public class ProgramEditorScreen extends GuiScreenExtend {
-    private final List<GuiEventListener> children = Lists.newArrayList();
-    private final List<Renderable> renderables=new ArrayList<>();
+
     private final ProgramEditScreenOpenContext openContext;
     protected MyMultiLineEditBox textarea;
     protected String lastProgram = "";
-    protected List<ITextComponent> lastProgramWithSyntaxHighlighting = new ArrayList<>();
+    protected List<ITextComponent> lastProgramWithSyntaxHighlighting = new CopyOnWriteArrayList<>();
     protected PickList<IntellisenseAction> suggestedActions;
-    private GuiEventListener focused;
 
-    private boolean dragging;
-    private int lastMouseX;
-    private int lastMouseY;
 
     public ProgramEditorScreen(
             ProgramEditScreenOpenContext openContext
@@ -63,27 +54,6 @@ public class ProgramEditorScreen extends GuiScreenExtend {
         this.openContext = openContext;
     }
 
-    @javax.annotation.Nullable
-    public GuiEventListener getFocused() {
-        return this.focused;
-    }
-
-    /**
-     * Sets the focus state of the GUI element.
-     *
-     * @param pListener the focused GUI element.
-     */
-    public void setFocused(@javax.annotation.Nullable GuiEventListener pListener) {
-        if (this.focused != null) {
-            this.focused.setFocused(false);
-        }
-
-        if (pListener != null) {
-            pListener.setFocused(true);
-        }
-
-        this.focused = pListener;
-    }
 
     public static String substring(
             ITextComponent component,
@@ -140,128 +110,19 @@ public class ProgramEditorScreen extends GuiScreenExtend {
     }
 
     @Override
-    public void handleMouseInput() throws IOException {
-        int i = Mouse.getEventX() * this.width / this.mc.displayWidth;
-        int j = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
-        int scroll = Mouse.getEventDWheel();
-        if (scroll != 0) {
-            this.mouseScrolled(i, j, 0, scroll > 0 ? 1 : -1);
-        }
-        super.handleMouseInput();
-    }
-
-
-    void setDragging(boolean pIsDragging) {
-        this.dragging=pIsDragging;
-    }
-
-    boolean isDragging() {
-        return dragging;
-    }
-    Optional<GuiEventListener> getChildAt(int pMouseX, int pMouseY) {
-        for (GuiEventListener guieventlistener : this.children) {
-            if (guieventlistener.isMouseOver(pMouseX, pMouseY)) {
-                return Optional.of(guieventlistener);
-            }
-        }
-
-        return Optional.empty();
-    }
-
-    @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
-
-        if(mouseButton==0){
-            lastMouseX = mouseX;
-            lastMouseY = mouseY;
-        }
-
-        for (GuiEventListener guieventlistener : this.children) {
-            if (guieventlistener.mouseClicked(mouseX, mouseY, mouseButton)) {
-                this.setFocused(guieventlistener);
-                if (mouseButton == 0) {
-                    this.setDragging(true);
-                }
-                return ;
-            }
-        }
-        return;
-    }
-
-    @Override
-    protected void mouseReleased(int mouseX, int mouseY, int state) {
-        super.mouseReleased(mouseX, mouseY, state);
-        if (state == 0 && this.isDragging()) {
-            this.setDragging(false);
-            if (this.getFocused() != null) {
-                this.getFocused().mouseReleased(mouseX, mouseY, state);
-            }
-        }
-
-        this.getChildAt(mouseX, mouseY).filter(p_94708_ -> p_94708_.mouseReleased(mouseX, mouseY, state));
-
-    }
-    boolean mouseScrolled(int pMouseX, int pMouseY, int pScrollX, int pScrollY) {
-        return this.getChildAt(pMouseX, pMouseY).filter(p_293596_ -> p_293596_.mouseScrolled(pMouseX, pMouseY, pScrollX, pScrollY)).isPresent();
-    }
-    @Override
-    protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
-        if (this.getFocused() != null && this.isDragging() && clickedMouseButton == 0) {
-            int dragX = mouseX - lastMouseX;
-            int dragY = mouseY - lastMouseY;
-            this.getFocused().mouseDragged(mouseX, mouseY, clickedMouseButton, dragX, dragY);
-        }
-        lastMouseX = mouseX;
-        lastMouseY = mouseY;
-    }
-    //      this version no keyReleased
-//    @Override
-//    public boolean keyReleased(
-//            int pKeyCode,
-//            int pScanCode,
-//            int pModifiers
-//    ) {
-//        if (pKeyCode == GLFW.GLFW_KEY_LEFT_CONTROL || pKeyCode == GLFW.GLFW_KEY_RIGHT_CONTROL) {
-//            // if control released => update syntax highlighting
-//            textarea.rebuild(GuiScreen.isCtrlKeyDown());
-//            return true;
-//        }
-//        return false;
-//    }
-
-    @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        try {
-            super.keyTyped(typedChar, keyCode);
-
-            // 模拟高版本 keyPressed
-            boolean b = this.keyPressed(keyCode, -1, 0);
-            if(b)return;
-
-            // 模拟高版本 charTyped，仅在字符有效时调用
-            if (typedChar != 0 && Tools.isAllowedChatCharacter(typedChar)) {
-                this.charTyped(typedChar, 0);
-            }
-        }catch (Exception e){
-            e.toString();
-        }
-    }
-
     public boolean charTyped(
             char pCodePoint,
             int pModifiers
     ) {
-        if (GuiScreen.isCtrlKeyDown() && pCodePoint == ' ') {
-            return true;
-        }
+
         if (!suggestedActions.isEmpty() && pCodePoint == '\\') {
             // prevent intellisense-accept hotkey from being typed
             return true;
         }
-        return this.getFocused() != null && this.getFocused().charTyped(pCodePoint, pModifiers);
+        return super.charTyped(pCodePoint, pModifiers);
     }
 
+    @Override
     public boolean keyPressed(
             int pKeyCode,
             int pScanCode,
@@ -354,7 +215,7 @@ public class ProgramEditorScreen extends GuiScreenExtend {
         if (pKeyCode == Keyboard.KEY_ESCAPE && this.shouldCloseOnEsc()) {
             this.onClose();
             return true;
-        } else if (this.getFocused() != null && this.getFocused().keyPressed(pKeyCode, pScanCode, pModifiers)){
+        } else if (this.getFocused() != null && this.getFocused().keyPressed(pKeyCode, pScanCode, pModifiers)) {
             return true;
         }
 //        else {
@@ -381,20 +242,18 @@ public class ProgramEditorScreen extends GuiScreenExtend {
 //        }
         return false;
     }
-    public boolean shouldCloseOnEsc() {
-        return true;
-    }
+
+    @Override
     public void onClose() {
         // If the content is different, ask to save
         if (!openContext.getProgramString().equals(textarea.getValue())) {
             GuiYesNo exitWithoutSavingConfirmScreen = getExitWithoutSavingConfirmScreen();
             SFMScreenChangeHelpers.setOrPushScreen(exitWithoutSavingConfirmScreen);
             exitWithoutSavingConfirmScreen.setButtonDelay(20);
-        } else{
+        } else {
             super.onClose();
         }
     }
-
 
 
     @Override
@@ -447,7 +306,7 @@ public class ProgramEditorScreen extends GuiScreenExtend {
 //            int mx,
 //            int my
 //    ) {
-        //// 1.19.2: manually render button tooltips
+    //// 1.19.2: manually render button tooltips
 //        this.renderables
 //                .stream()
 //                .filter(SFMExtendedButtonWithTooltip.class::isInstance)
@@ -460,7 +319,7 @@ public class ProgramEditorScreen extends GuiScreenExtend {
         return this.addWidget(pWidget);
     }
 
-    protected <T extends GuiEventListener > T addWidget(T pListener) {
+    protected <T extends GuiEventListener> T addWidget(T pListener) {
         this.children.add(pListener);
         return pListener;
     }
@@ -566,6 +425,8 @@ public class ProgramEditorScreen extends GuiScreenExtend {
 
     protected class MyMultiLineEditBox extends MultiLineEditBox {
         private int frame = 0;
+        private int lastCursorX = 0;
+        private int lastCursorY = 0;
 
         public MyMultiLineEditBox() {
             super(
@@ -579,6 +440,7 @@ public class ProgramEditorScreen extends GuiScreenExtend {
             );
             this.textField.setValueListener(this::onValueOrCursorChanged);
             this.textField.setCursorListener(() -> this.onValueOrCursorChanged(this.textField.value()));
+            this.setFocused(true);
         }
 
         public void scrollToTop() {
@@ -683,7 +545,7 @@ public class ProgramEditorScreen extends GuiScreenExtend {
         }
 
         public double getScrollAmount() {
-            return this.getScrollAmount();
+            return this.scrollAmount();
         }
 
         @Override
@@ -767,14 +629,13 @@ public class ProgramEditorScreen extends GuiScreenExtend {
                 rebuild(GuiScreen.isCtrlKeyDown());
             }
             List<ITextComponent> lines = lastProgramWithSyntaxHighlighting;
-            boolean isCursorVisible = this.isFocused() && this.frame++ / 60 % 2 == 0;
+            boolean isFrameVisible = this.isFocused() && this.frame++ / 60 % 2 == 0;
+            boolean isCursorVisible = false;
             boolean isCursorAtEndOfLine = false;
             int cursorIndex = textField.cursor();
             int lineX = SFMScreenRenderUtils.getX(this) + this.innerPadding() + getLineNumberWidth();
             int lineY = SFMScreenRenderUtils.getY(this) + this.innerPadding();
             int charCount = 0;
-            int cursorX = 0;
-            int cursorY = 0;
             MultilineTextField.StringView selectedRange = this.textField.getSelected();
             int selectionStart = selectedRange.beginIndex();
             int selectionEnd = selectedRange.endIndex();
@@ -783,9 +644,10 @@ public class ProgramEditorScreen extends GuiScreenExtend {
                 ITextComponent componentColoured = lines.get(line);
                 int lineLength = componentColoured.getUnformattedText().length();
                 int lineHeight = this.font.FONT_HEIGHT;
-                boolean cursorOnThisLine = isCursorVisible
-                        && cursorIndex >= charCount
-                        && cursorIndex <= charCount + lineLength;
+                boolean cursorOnThisLine =
+                        cursorIndex >= charCount &&
+                                cursorIndex <= charCount + lineLength;
+                isCursorVisible = cursorOnThisLine && isFrameVisible;
 //                buffer = graphics.bufferSource();
                 if (shouldShowLineNumbers()) {
                     // Draw line number
@@ -801,25 +663,24 @@ public class ProgramEditorScreen extends GuiScreenExtend {
 
                 if (cursorOnThisLine) {
                     isCursorAtEndOfLine = cursorIndex == charCount + lineLength;
-                    cursorY = lineY;
+                    lastCursorY = lineY;
                     // draw text before cursor
-                    cursorX = SFMFontUtils.drawInBatch(
+                    lastCursorX = SFMFontUtils.drawInBatch(
                             substring(componentColoured, 0, cursorIndex - charCount),
                             font,
                             lineX,
                             lineY,
                             true
                     ) - 1;
-                    ProgramEditorScreen.this.suggestedActions.setXY(cursorX + 10, cursorY);
-                    // draw text after cursor
                     SFMFontUtils.drawInBatch(
                             substring(componentColoured, cursorIndex - charCount, lineLength),
                             font,
-                            cursorX,
+                            lastCursorX,
                             lineY,
                             true
                     );
-                } else {
+                    ProgramEditorScreen.this.suggestedActions.setXY(lastCursorX + 10, lastCursorY);
+                }else {
                     SFMFontUtils.drawInBatch(
                             componentColoured,
                             font,
@@ -845,7 +706,7 @@ public class ProgramEditorScreen extends GuiScreenExtend {
                     );
                     Style style = componentColoured.getStyle();
                     SFMFontUtils.drawInBatch(
-                            new TextComponentString(componentColoured.getUnformattedText().substring(lineSelectionStart,lineSelectionEnd)).setStyle(style),
+                            new TextComponentString(componentColoured.getUnformattedText().substring(lineSelectionStart, lineSelectionEnd)).setStyle(style),
                             font,
                             lineX + highlightStartX,
                             lineY,
@@ -853,13 +714,13 @@ public class ProgramEditorScreen extends GuiScreenExtend {
                 }
 
                 lineY += lineHeight;
-                charCount += lineLength +1;
+                charCount += lineLength + 1;
             }
 
             if (isCursorAtEndOfLine) {
-                SFMFontUtils.draw(font,"_", cursorX, cursorY, -1, true);
+                SFMFontUtils.draw(font, "_", lastCursorX, lastCursorY, -1, true);
             } else {
-                Gui.drawRect(cursorX-1, cursorY - 1, cursorX, cursorY + 1 + 9, -1);
+                Gui.drawRect(lastCursorX - 1, lastCursorY - 1, lastCursorX, lastCursorY + 1 + 9, -1);
             }
         }
     }

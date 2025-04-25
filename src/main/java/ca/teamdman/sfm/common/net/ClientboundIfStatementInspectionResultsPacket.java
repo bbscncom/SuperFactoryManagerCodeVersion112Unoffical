@@ -11,6 +11,9 @@ public class ClientboundIfStatementInspectionResultsPacket implements SFMMessage
     public static final int MAX_RESULTS_LENGTH = 2048;
     public String results;
 
+    public ClientboundIfStatementInspectionResultsPacket() {
+    }
+
     public ClientboundIfStatementInspectionResultsPacket(String results) {
         this.results = results;
     }

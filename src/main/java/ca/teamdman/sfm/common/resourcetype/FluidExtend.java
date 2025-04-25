@@ -22,17 +22,17 @@ public class FluidExtend extends Fluid implements IForgeRegistryEntry<FluidExten
     }
     @Override
     public FluidExtend setRegistryName(ResourceLocation name) {
-        return this.setRegistryName(name);
+        throw new UnsupportedOperationException("wrapper only for read");
     }
 
     @Nullable
     @Override
     public ResourceLocation getRegistryName() {
-        return this.getRegistryName();
+        return new ResourceLocation(getUnlocalizedName());
     }
 
     @Override
     public Class<FluidExtend> getRegistryType() {
-        return this.getRegistryType();
+        return (Class<FluidExtend>) this.getClass();
     }
 }

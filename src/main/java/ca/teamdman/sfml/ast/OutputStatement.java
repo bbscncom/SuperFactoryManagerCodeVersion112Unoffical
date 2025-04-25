@@ -602,6 +602,7 @@ public class OutputStatement implements IOStatement {
     ) {
         // Chest holding dirt: maxStackSizeForStack=64 maxStackSizeForSlot=99
         // Bin holding sticks: maxStackSizeForStack=64 maxStackSizeForSlot=102400
+        if(stack==null)return true;
         long amount = type.getAmount(stack);
         long maxStackSizeForSlot = type.getMaxStackSizeForSlot(cap, slot);
         if (maxStackSizeForSlot > 99) {

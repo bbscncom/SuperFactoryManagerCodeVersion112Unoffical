@@ -133,7 +133,7 @@ public class PickList<T extends PickListItem> extends AbstractScrollWidget {
         } else {
             this.setScrollAmount(
                     this.selectionIndex * this.getItemHeight()
-                    - this.height / 2.0f + this.getItemHeight()
+                            - this.height / 2.0f + this.getItemHeight()
             );
         }
     }
@@ -201,14 +201,13 @@ public class PickList<T extends PickListItem> extends AbstractScrollWidget {
 
         // Calculate which items are visible in the current viewport
         int itemHeight = getItemHeight();
-        int startIndex = (int)(scrollAmount() / itemHeight);
-        int visibleCount = (int)Math.ceil((double)height / itemHeight) + 1;
+        int startIndex = (int) (scrollAmount() / itemHeight);
+        int visibleCount = (int) Math.ceil((double) height / itemHeight) + 1;
         int endIndex = Math.min(items.size(), startIndex + visibleCount);
 
         // Only render the visible items
 
         int lineX = SFMScreenRenderUtils.getX(this) + this.innerPadding();
-        Rect2i highlight = null;
 
         // Render only the visible subset of items
         for (int i = startIndex; i < endIndex; i++) {
@@ -216,30 +215,21 @@ public class PickList<T extends PickListItem> extends AbstractScrollWidget {
             // Calculate the y position based on the item's position in the full list
             int lineY = SFMScreenRenderUtils.getY(this) + this.innerPadding() + (i * itemHeight);
 
+            if (i == this.selectionIndex) {
+                SFMScreenRenderUtils.renderHighlight(
+                        lineX,
+                        lineY,
+                        lineX + this.width,
+                        lineY + itemHeight
+                );
+            }
+
             SFMFontUtils.drawInBatch(
-                    item.getComponent().getUnformattedText(),
+                    item.getComponent().getFormattedText(),
                     this.font,
                     lineX,
                     lineY,
                     true
-            );
-
-            if (i == this.selectionIndex) {
-                highlight = new Rect2i(
-                        lineX,
-                        lineY,
-                        this.width,
-                        itemHeight
-                );
-            }
-        }
-
-        if (highlight != null) {
-            SFMScreenRenderUtils.renderHighlight(
-                    highlight.getX(),
-                    highlight.getY(),
-                    highlight.getX() + highlight.getWidth(),
-                    highlight.getY() + highlight.getHeight()
             );
         }
     }

@@ -90,7 +90,7 @@ public class SFMTranslationUtils {
                 newArgs[i] = arg.toString();
             }
         }
-        return new TextComponentTranslation(key, null, newArgs);
+        return new TextComponentTranslation(key, newArgs);
     }
 
     /**

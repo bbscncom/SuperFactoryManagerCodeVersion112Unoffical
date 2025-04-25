@@ -33,20 +33,18 @@ public class TranslatableLogEvent {
         return contents;
     }
 
-    public void encode(ByteBuf buf) {
-        buf.writeBytes(level.name().getBytes(StandardCharsets.UTF_8));
+    public void encode(PacketBuffer buf) {
+        buf.writeString(level.name());
         buf.writeLong(instant.getEpochMillisecond());
         buf.writeInt(instant.getNanoOfMillisecond());
         SFMTranslationUtils.encodeTranslation(contents, new PacketBuffer(buf));
     }
 
-    public static TranslatableLogEvent decode(ByteBuf buf) {
-        byte[] bytes = new byte[buf.readableBytes()];
-        buf.readBytes(bytes);
-        Level level = Level.getLevel(new String(bytes, StandardCharsets.UTF_8));
+    public static TranslatableLogEvent decode(PacketBuffer buf) {
+        Level level = Level.getLevel(buf.readString(999));
         long epochMillisecond = buf.readLong();
         int epochNano = buf.readInt();
-        TextComponentTranslation contents = SFMTranslationUtils.decodeTranslation(new PacketBuffer(buf));
+        TextComponentTranslation contents = SFMTranslationUtils.decodeTranslation(buf);
 
         MutableInstant instant = new MutableInstant();
         instant.initFromEpochMilli(epochMillisecond, epochNano);
