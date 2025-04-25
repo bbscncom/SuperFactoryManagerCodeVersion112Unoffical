@@ -1,20 +1,8 @@
-## TemplateDevEnv
-_For Kotlin see [TemplateDevEnvKt](https://github.com/CleanroomMC/TemplateDevEnvKt)_
+#超级工厂代码版本移植到1.12
 
-Template workspace for modding Minecraft 1.12.2. Licensed under MIT, it is made for public use.
+###进度
+物体流体能量传输，基础语法（毕竟我自己玩也只用部分），大部分的按钮和功能。勉强
 
-This template runs on Java 21! Currently utilizies **Gradle 8.12** + **[RetroFuturaGradle](https://github.com/GTNewHorizons/RetroFuturaGradle) 1.4.1** + **Forge 14.23.5.2847**.
-
-With **coremod and mixin support** that is easy to configure.
-
-### Instructions:
-
-1. Click `use this template` at the top.
-2. Clone the repository that you have created with this template to your local machine.
-3. Make sure IDEA is using Java 21 for Gradle before you sync the project. Verify this by going to IDEA's `Settings > Build, Execution, Deployment > Build Tools > Gradle > Gradle JVM`.
-4. Open the project folder in IDEA. When prompted, click "Load Gradle Project" as it detects the `build.gradle`, if you weren't prompted, right-click the project's `build.gradle` in IDEA, select `Link Gradle Project`, after completion, hit `Refresh All` in the gradle tab on the right.
-5. Run gradle tasks such as `runClient` and `runServer` in the IDEA gradle tab, or use the auto-imported run configurations like `1. Run Client`.
-
-### Mixins:
-
-- When writing Mixins on IntelliJ, it is advisable to use latest [MinecraftDev Fork for RetroFuturaGradle](https://github.com/eigenraven/MinecraftDev/releases).
+###问题
+因为forge高低版本和java的高低版本导致整个项目全是报错 为了启动删了不少东西和 
+因为第一次接触刚开始完全不懂，根据ai改估计也改错了不少东西
