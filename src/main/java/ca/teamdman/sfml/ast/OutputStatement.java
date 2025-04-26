@@ -420,6 +420,7 @@ public class OutputStatement implements IOStatement {
             // create a single list of trackers to be shared between all limited slots
             List<IOutputResourceTracker> outputTracker = resourceLimits.createOutputTrackers();
             for (ResourceType resourceType : resourceLimits.getReferencedResourceTypes()) {
+                if(resourceType==null) break;     //dont know why is null
                 context
                         .getLogger()
                         .debug(x -> x.accept(LOG_PROGRAM_TICK_IO_STATEMENT_GATHER_SLOTS_FOR_RESOURCE_TYPE.get(

@@ -206,7 +206,8 @@ dependencies {
     implementation "org.jetbrains:annotations:24.1.0"
 
     embed 'org.antlr:antlr4-runtime:4.13.1'
-//    api 'curse.maven:CensoredASM-460609:6333774'
+    implementation rfg.deobf('curse.maven:CensoredASM-460609:6333774')
+
 }
 
 

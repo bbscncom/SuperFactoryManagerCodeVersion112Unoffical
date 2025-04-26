@@ -89,6 +89,7 @@ public class GatherWarningsProgramBehaviour extends SimulateExploreAllPathsProgr
         Set<ResourceType> seekingResourceTypes = outputStatement
                 .getReferencedIOResourceIds()
                 .map(ResourceIdentifier::getResourceType)
+                .filter(Objects::nonNull)   //error type like fludi:: crash null error, 1.20 not exception ,i dont no why,so simple filter
                 .collect(Collectors.toSet());
 
         for (ResourceType resourceType : seekingResourceTypes) {

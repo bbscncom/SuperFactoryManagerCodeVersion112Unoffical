@@ -16,8 +16,11 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import org.lwjgl.opengl.GL11;
 
@@ -857,6 +860,39 @@ public class Tools {
                 colorArray[3] / 255f, // B
                 colorArray[0] / 255f  // Alpha
         };
+    }
+
+    public static void defaultize(ITextComponent component) {
+        Style style = component.getStyle();
+
+        TextFormatting color = style.getColor();
+        if (color == null) {
+            style.setColor(TextFormatting.WHITE);
+        }
+
+        // 基本类型，直接set一遍，断开parent
+        style.setBold(style.getBold());
+        style.setItalic(style.getItalic());
+        style.setUnderlined(style.getUnderlined());
+        style.setStrikethrough(style.getStrikethrough());
+        style.setObfuscated(style.getObfuscated());
+
+        String insertion = style.getInsertion();
+        if (insertion == null) {
+            style.setInsertion("");
+        }
+        ClickEvent clickEvent = style.getClickEvent();
+        if (clickEvent == null) {
+            style.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, ""));
+        }
+
+        HoverEvent hoverEvent = style.getHoverEvent();
+        if (hoverEvent == null) {
+            style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, null));
+        }
+        for (ITextComponent sibling : component.getSiblings()) {
+            defaultize(sibling);
+        }
     }
 }
 

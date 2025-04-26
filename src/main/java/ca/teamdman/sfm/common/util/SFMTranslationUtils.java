@@ -1,5 +1,6 @@
 package ca.teamdman.sfm.common.util;
 
+import my.Tools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -90,7 +91,9 @@ public class SFMTranslationUtils {
                 newArgs[i] = arg.toString();
             }
         }
-        return new TextComponentTranslation(key, newArgs);
+        TextComponentTranslation iTextComponents = new TextComponentTranslation(key, newArgs);
+        Tools.defaultize(iTextComponents);
+        return iTextComponents;
     }
 
     /**

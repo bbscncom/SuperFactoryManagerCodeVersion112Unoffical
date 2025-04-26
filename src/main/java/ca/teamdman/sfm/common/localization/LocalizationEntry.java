@@ -1,6 +1,7 @@
 package ca.teamdman.sfm.common.localization;
 
 import ca.teamdman.sfm.common.util.SFMTranslationUtils;
+import my.Tools;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -42,7 +43,9 @@ public final class LocalizationEntry {
     }
 
     public ITextComponent getComponent() {
-        return new TextComponentTranslation(key.get());
+        TextComponentTranslation iTextComponents = new TextComponentTranslation(key.get());
+        Tools.defaultize(iTextComponents);
+        return iTextComponents;
     }
 
     public ITextComponent getComponent(Object... args) {
