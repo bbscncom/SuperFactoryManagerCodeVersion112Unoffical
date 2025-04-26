@@ -201,11 +201,12 @@ dependencies {
 //    implementation "curse.maven:Mekanism-268560:2510812"
     implementation "curse.maven:Mekanism-268560:2755008"
     //newest
-    implementation "curse.maven:CensoredASM-460609:6333774"
+//    implementation "curse.maven:CensoredASM-460609:6333774"
 //    implementation "curse.maven:CensoredASM-460609:4553503"
     implementation "org.jetbrains:annotations:24.1.0"
 
     embed 'org.antlr:antlr4-runtime:4.13.1'
+//    api 'curse.maven:CensoredASM-460609:6333774'
 }
 
 

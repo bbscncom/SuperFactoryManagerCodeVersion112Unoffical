@@ -2,3 +2,17 @@ every 20ticks do
 input from in
 output to out
 end
+
+
+every 20ticks do
+input from in
+output to handler
+forget
+input fluid:: from water
+output fludi:: to handler
+forget
+input fe:: from handler
+output fe:: to feout
+end
+
+decompileSrgJar decompressDecompiledSources deobfuscateMergedJarToSrg
