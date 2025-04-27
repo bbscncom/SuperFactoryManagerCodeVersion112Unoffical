@@ -23,15 +23,15 @@ public class FluidResourceType extends RegistryBackedResourceType<FluidStack, Fl
 
     public FluidResourceType() {
         super(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
-    }
-
-    @Override
-    public IForgeRegistry<FluidExtend> getRegistry() {
         if (!isWrapper) {
             Map<String, Fluid> regs = FluidRegistry.getRegisteredFluids();
             fluidRegistryWrapper.wrapper(regs);
             isWrapper = true;
         }
+    }
+
+    @Override
+    public IForgeRegistry<FluidExtend> getRegistry() {
         return fluidRegistryWrapper;
     }
 

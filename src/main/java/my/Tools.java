@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
@@ -827,7 +828,6 @@ public class Tools {
     }
 
 
-
     public static Color intToColor(int color) {
         return new Color(
                 (color >> 16) & 0xFF,
@@ -837,6 +837,7 @@ public class Tools {
 
     /**
      * 将 4 参数颜色数组转换为 ARGB 十六进制值
+     *
      * @param colorArray [Alpha, R, G, B] (每个分量 0~255)
      */
     public static int toARGB(int[] colorArray) {
@@ -854,7 +855,7 @@ public class Tools {
      * 获取浮点数形式的颜色（用于 OpenGL）
      */
     public static float[] toFloatArray(int[] colorArray) {
-        return new float[] {
+        return new float[]{
                 colorArray[1] / 255f, // R
                 colorArray[2] / 255f, // G
                 colorArray[3] / 255f, // B
@@ -893,6 +894,18 @@ public class Tools {
         for (ITextComponent sibling : component.getSiblings()) {
             defaultize(sibling);
         }
+    }
+
+    //todo  thermal direction null cause exception, maybe a bug, temp to solve
+
+    public static boolean isCantNullDirection(TileEntity tileEntity) {
+        if (tileEntity == null) return false;
+        String name = tileEntity.getClass().getName();
+        String[] modlist = new String[]{"thermalexpansion"};
+        for (String s : modlist) {
+            if (name.contains(s)) return true;
+        }
+        return false;
     }
 }
 

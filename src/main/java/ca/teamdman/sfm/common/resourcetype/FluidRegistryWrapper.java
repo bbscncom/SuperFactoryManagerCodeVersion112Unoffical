@@ -2,11 +2,14 @@ package ca.teamdman.sfm.common.resourcetype;
 
 import com.google.common.collect.HashBiMap;
 import my.Tools;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,6 +21,7 @@ import java.util.stream.Collectors;
  * 将 1.12.2 的 FluidRegistry 封装成类似 IForgeRegistry<Fluid> 的接口
  */
 public class FluidRegistryWrapper implements IForgeRegistry<FluidExtend> {
+    private static Logger log= LogManager.getLogger("sfm");
     public static final FluidRegistryWrapper INSTANCE = new FluidRegistryWrapper();
 
     public static final HashBiMap<String, Fluid> fluids = HashBiMap.create();
@@ -30,7 +34,12 @@ public class FluidRegistryWrapper implements IForgeRegistry<FluidExtend> {
     }
 
     public void wrapper(Map<String, Fluid> map) {
-        fluids.putAll(map);
+        map.forEach((s, fluid) -> {
+            if(fluids.inverse().containsValue(map)){
+                log.warn("fluid duplication ,fluid name:{}, data:{}",s,fluid.getClass().getName()+"|"+fluid.getUnlocalizedName());
+            }
+            fluids.putIfAbsent(s,fluid);
+        });
         map.forEach((s, fluid) -> fluidsWrapper.put(new ResourceLocation(s), FluidExtend.wrapper(fluid)));
     }
 

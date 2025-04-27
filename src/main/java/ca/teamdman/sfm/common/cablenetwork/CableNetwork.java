@@ -7,6 +7,7 @@ import ca.teamdman.sfm.common.util.SFMDirections;
 import ca.teamdman.sfm.common.util.SFMStreamUtils;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
+import my.Tools;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -147,24 +148,29 @@ public class CableNetwork {
         @javax.annotation.Nullable Capability found = CAPABILITY_CACHE.getCapability(pos, capKind, direction);
         if (found != null) {
             TileEntity tileEntity = world.getTileEntity(pos);
-            CAP capability = tileEntity!=null?tileEntity.getCapability(capKind, direction):null;
+            if (direction==null && Tools.isCantNullDirection(tileEntity))
+                direction = EnumFacing.NORTH;
+            CAP capability = tileEntity != null ? tileEntity.getCapability(capKind, direction) : null;
 //            CAP cap = found.getCapability(pos,capKind,direction);
             if (capability != null) {
+                @Nullable EnumFacing finalDirection = direction;
                 logger.trace(x -> x.accept(LocalizationKeys.LOG_CAPABILITY_CACHE_HIT.get(
                         pos,
                         capKind.getName(),
-                        direction
+                        finalDirection
                 )));
                 return capability;
             } else {
+                @Nullable EnumFacing finalDirection1 = direction;
                 logger.trace(x -> x.accept(LocalizationKeys.LOG_CAPABILITY_CACHE_HIT_INVALID.get(
                         pos,
                         capKind.getName(),
-                        direction
+                        finalDirection1
                 )));
             }
         } else {
-            logger.trace(x -> x.accept(LocalizationKeys.LOG_CAPABILITY_CACHE_MISS.get(pos, capKind.getName(), direction)));
+            @Nullable EnumFacing finalDirection2 = direction;
+            logger.trace(x -> x.accept(LocalizationKeys.LOG_CAPABILITY_CACHE_MISS.get(pos, capKind.getName(), finalDirection2)));
         }
 
         if (!isAdjacentToCable(pos)) {
@@ -172,6 +178,11 @@ public class CableNetwork {
             return null;
         }
         TileEntity tileEntity = world.getTileEntity(pos);
+
+        //thermal has is true ,but get and extract null exception
+        //((IEnergyStorage)tileEntity.getCapability(capKind, direction)).extractEnergy(1,true)
+        if (direction == null && Tools.isCantNullDirection(tileEntity))
+            direction = EnumFacing.NORTH;
         CAP capability = tileEntity != null && tileEntity.hasCapability(capKind, direction) ? tileEntity.getCapability(capKind, direction) : null;
 
         if (capability != null) {
@@ -188,7 +199,8 @@ public class CableNetwork {
             );*/
             CAPABILITY_CACHE.putCapability(pos, capKind, direction, capKind);
         } else {
-            logger.warn(x -> x.accept(LocalizationKeys.LOGS_EMPTY_CAPABILITY.get(pos, capKind.getName(), direction)));
+            @Nullable EnumFacing finalDirection3 = direction;
+            logger.warn(x -> x.accept(LocalizationKeys.LOGS_EMPTY_CAPABILITY.get(pos, capKind.getName(), finalDirection3)));
         }
         return capability;
     }
