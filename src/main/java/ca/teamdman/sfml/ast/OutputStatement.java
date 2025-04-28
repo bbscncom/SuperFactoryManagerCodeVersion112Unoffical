@@ -1,5 +1,6 @@
 package ca.teamdman.sfml.ast;
 
+import ca.teamdman.sfm.SFM;
 import ca.teamdman.sfm.common.localization.LocalizationKeys;
 import ca.teamdman.sfm.common.program.*;
 import ca.teamdman.sfm.common.registry.SFMResourceTypes;
@@ -10,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -64,6 +66,7 @@ public class OutputStatement implements IOStatement {
         // find out what we can pull out
         // should never be empty by the time we get here
         STACK potential = source.peekExtractPotential();
+
         // ensure the output slot allows this item
         if (!destination.tracker.matchesStack(potential)) {
             context
@@ -72,8 +75,13 @@ public class OutputStatement implements IOStatement {
             return;
         }
 
+        SFM.LOGGER.warn("-------------------"+potential);
         // find out how much we can fit
         STACK potentialRemainder = destination.insert(potential, true);
+
+        if(potentialRemainder==null){
+            return ;
+        }
 
         // how many can we move before accounting for limits
         long toMove = source.type.getAmountDifference(potential, potentialRemainder);
@@ -156,6 +164,10 @@ public class OutputStatement implements IOStatement {
 
         // extract item for real
         STACK extracted = source.extract(toMove);
+        if(extracted==null){
+            return ;
+        }
+
         context
                 .getLogger()
                 .debug(x -> x.accept(LOG_PROGRAM_TICK_IO_STATEMENT_MOVE_TO_EXTRACTED.get(extracted, source)));

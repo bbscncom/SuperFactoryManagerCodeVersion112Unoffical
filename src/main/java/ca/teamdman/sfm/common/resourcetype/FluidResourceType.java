@@ -68,8 +68,7 @@ public class FluidResourceType extends RegistryBackedResourceType<FluidStack, Fl
 
     @Override
     public FluidStack getStackInSlot(IFluidHandler cap, int slot) {
-        FluidStack contents = cap.getTankProperties()[slot].getContents();
-        return contents == null ? null : contents;
+        return cap.getTankProperties()[slot].getContents();
     }
 
     @Override
