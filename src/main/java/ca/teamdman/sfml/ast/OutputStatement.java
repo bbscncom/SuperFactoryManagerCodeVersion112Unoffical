@@ -75,7 +75,6 @@ public class OutputStatement implements IOStatement {
             return;
         }
 
-        SFM.LOGGER.warn("-------------------"+potential);
         // find out how much we can fit
         STACK potentialRemainder = destination.insert(potential, true);
 
