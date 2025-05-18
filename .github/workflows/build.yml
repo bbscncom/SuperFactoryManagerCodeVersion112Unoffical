@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: 8  # 可根据需要改为 17 等
+          java-version: 17  # 可根据需要改为 17 等
 
       - name: Read mod version from gradle.properties
         id: get_version
